@@ -2,6 +2,7 @@ from Tkinter import *
 import threading
 import time
 from firebase import firebase
+import os
 firebase = firebase.FirebaseApplication('https://domotica-2020.firebaseio.com/',None)
 if __name__ == '__main__':
 
@@ -136,6 +137,10 @@ if __name__ == '__main__':
 			threading.Timer(1.0, info6).start()
 			result = firebase.get('/reley-6','')
 			t_btn6.config(text=result)
+
+		def popo():
+			root.destroy()
+			os._exit(1)
 			
 
 			
@@ -147,4 +152,5 @@ if __name__ == '__main__':
 		info6()
 		
 		
+		root.protocol('WM_DELETE_WINDOW', popo)
 		root.mainloop()
