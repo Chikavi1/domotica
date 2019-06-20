@@ -3,77 +3,84 @@ import threading
 import time
 from firebase import firebase
 import os
+import RPi.GPIO as GPIO
+#configuraciones
 firebase = firebase.FirebaseApplication('https://domotica-2020.firebaseio.com/',None)
+GPIO.setmode(GPIO.BCM) 
+RELAIS_1_GPIO = 17
+GPIO.setup(RELAIS_1_GPIO, GPIO.OUT) 
+
+
 if __name__ == '__main__':
 
 		def relay1():
 			if t_btn['text'] == 'encendido':
 				t_btn.config(text='apagado')
+                                GPIO.output(RELAIS_1_GPIO, GPIO.LOW)
 				firebase.put('/','reley-1','apagado')
-				print("apague reley")
-
+				
 			else:
 				t_btn.config(text='encendido')
-				firebase.put('/','reley-1','encendido')
-				print("prendi reley")
+				GPIO.output(RELAIS_1_GPIO, GPIO.HIGH)
+                                firebase.put('/','reley-1','encendido')
+				
 
 		def relay2():
-			if t_btn2['text'] == 'encendido':
+			if t_btn2['text'] == 'encendido':      
 				t_btn2.config(text='apagado')
 				firebase.put('/','reley-2','apagado')
-				print("apague reley")
+				
 
 			else:
 				t_btn2.config(text='encendido')
 				firebase.put('/','reley-2','encendido')
-				print("prendi reley")
+				
 
 		def relay3():
 			if t_btn3['text'] == 'encendido':
 				t_btn3.config(text='apagado')
 				firebase.put('/','reley-3','apagado')
-				print("apague reley")
+				
 
 			else:
 				t_btn3.config(text='encendido')
 				firebase.put('/','reley-3','encendido')
-				print("prendi reley")
+				
 
 
 		def relay4():
 			if t_btn4['text'] == 'encendido':
 				t_btn4.config(text='apagado')
 				firebase.put('/','reley-4','apagado')
-				print("apague reley")
+				
 
 			else:
 				t_btn4.config(text='encendido')
 				firebase.put('/','reley-4','encendido')
-				print("prendi reley")
-
+				
 
 		def relay5():
 			if t_btn5['text'] == 'encendido':
 				t_btn5.config(text='apagado')
 				firebase.put('/','reley-5','apagado')
-				print("apague reley")
+				
 
 			else:
 				t_btn5.config(text='encendido')
 				firebase.put('/','reley-5','encendido')
-				print("prendi reley")
+				
 
 
 		def relay6():
 			if t_btn6['text'] == 'encendido':
 				t_btn6.config(text='apagado')
 				firebase.put('/','reley-6','apagado')
-				print("apague reley")
+           
 
 			else:
 				t_btn6.config(text='encendido')
 				firebase.put('/','reley-6','encendido')
-				print("prendi reley")
+                 	
 
 
 
@@ -106,13 +113,19 @@ if __name__ == '__main__':
 
 		t_btn6 = Button(text= x, width=12, command=relay6)
 		t_btn6.place(x=100,y=350)
-
-		
+        
+                
+                
+        
+    
+                    
 		def info():
-			threading.Timer(1.0, info).start()
+			threading.Timer(10.0, info).start()
 			result = firebase.get('/reley-1','')
 			t_btn.config(text=result)
-
+                        checkout(RELAIS_1_GPIO,result) 
+                 
+                
 		def info2():
 			threading.Timer(1.0, info2).start()
 			result = firebase.get('/reley-2','')
@@ -138,12 +151,19 @@ if __name__ == '__main__':
 			result = firebase.get('/reley-6','')
 			t_btn6.config(text=result)
 
+                def checkout(pin,resultado):
+                    if(resultado == "apagado"):
+                        print("esta apagado")
+                        return GPIO.output(pin, GPIO.LOW)
+                    else:
+                        print("esta encendido")
+                        return GPIO.output(pin, GPIO.HIGH)
+                
+                
 		def popo():
 			root.destroy()
 			os._exit(1)
-			
-
-			
+            
 		info()
 		info2()
 		info3()
